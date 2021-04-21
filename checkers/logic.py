@@ -94,3 +94,19 @@ class Game:
             self.turn = WHITE
         else:
             self.turn = RED
+
+    def get_board(self):
+        """
+        Return the board
+        :return: board
+        """
+        return self.board
+
+    def actor_move(self, board):
+        """
+        The actor can pass a new board object to update the game
+        :param board: New board
+        """
+
+        self.board = board
+        self.change_turn()
