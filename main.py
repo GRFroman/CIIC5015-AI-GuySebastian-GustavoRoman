@@ -1,5 +1,5 @@
 import pygame
-from checkers.config import WIDTH, HEIGHT, SQUARE_SIZE, RED
+from checkers.config import WIDTH, HEIGHT, SQUARE_SIZE
 from checkers.logic import Game
 FPS = 60
 
@@ -7,13 +7,20 @@ WINDOW = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Checkers AI")
 
 def get_pos_from_mouse(pos):
+    """
+    Calculate the row and column of the board in relation to the mouse click coordinate
+    :param pos: Mouse click coordinates
+    :return: relative row and column
+    """
     x, y = pos
     row = y // SQUARE_SIZE
     col = x // SQUARE_SIZE
     return row, col
 
-# Event loop
 def main():
+    """
+    Main event loop
+    """
     run = True
     clock = pygame.time.Clock()
     game = Game(WINDOW)

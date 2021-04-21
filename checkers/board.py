@@ -11,12 +11,30 @@ class Board:
         self.create_board()
 
     def draw_squares(self, win):
+        """
+        Draw the checkerboard pattern
+        :param win: Pygame window
+        """
         win.fill(BLACK)
         for row in range(ROWS):
             for col in range(row % 2, COLS, 2):
                 pygame.draw.rect(win, RED, (row * SQUARE_SIZE, col * SQUARE_SIZE, SQUARE_SIZE, SQUARE_SIZE))
 
+    def evaluate(self):
+        """
+        Returns a general scoreboard assuming that white is the AI controlled actor
+        :return: integer representing current score
+        """
+        return self.white_left - self.red_left + (self.white_kings * 0.5 - self.red_kings * 0.5)
+
     def move(self, piece, row, col):
+        """
+        Moves the given piece to the given coordinates
+        Will also evaluate if fit to king promotion
+        :param piece: Piece to move
+        :param row: Target row
+        :param col:  Target column
+        """
         self.board[piece.row][piece.col], self.board[row][col] = self.board[row][col], self.board[piece.row][piece.col]
         piece.move(row, col)
 
@@ -28,9 +46,18 @@ class Board:
                 self.red_kings += 1
 
     def get_piece(self, row, col):
+        """
+        Return the current piece
+        :param row: Target row
+        :param col: Target column
+        :return:
+        """
         return self.board[row][col]
 
     def create_board(self):
+        """
+        Initialize the board array
+        """
         for row in range(ROWS):
             self.board.append([])
             for col in range(COLS):
@@ -45,6 +72,10 @@ class Board:
                     self.board[row].append(0)
 
     def draw(self, win):
+        """
+        Generic draw function, also iterates through the board to draw each individual piece
+        :param win: Target pygame window
+        """
         self.draw_squares(win)
         for row in range(ROWS):
             for col in range(COLS):
@@ -53,6 +84,10 @@ class Board:
                     piece.draw(win)
 
     def remove(self, pieces):
+        """
+        Removes a piece, assume it just got eaten
+        :param pieces: Pieces to remove
+        """
         for piece in pieces:
             self.board[piece.row][piece.col] = 0
             if piece != 0:
@@ -62,6 +97,10 @@ class Board:
                     self.white_left -= 1
 
     def winner(self):
+        """
+        Determine if a winner has already been found
+        :return: The obj's string representation
+        """
         if self.red_left <= 0:
             return WHITE
         elif self.white_left <= 0:
@@ -70,6 +109,11 @@ class Board:
         return None
 
     def get_valid_moves(self, piece):
+        """
+        Calculate which moves are currently legal for the given piece
+        :param piece: Piece to move
+        :return: The moves that can be performed
+        """
         moves = {}
         left = piece.col - 1
         right = piece.col + 1
@@ -85,6 +129,16 @@ class Board:
         return moves
 
     def _traverse_left(self, start, stop, step, color, left, skipped=[]):
+        """
+        A traversal function to determine its left possibilities
+        :param start: Where to start
+        :param stop: Ending coordinate
+        :param step: Iteration resolution
+        :param color: Which piece format to follow
+        :param left: Direction
+        :param skipped: Used for self recursion
+        :return: Possible moves
+        """
         moves = {}
         last = []
         for r in range(start, stop, step):
@@ -118,6 +172,16 @@ class Board:
         return moves
 
     def _traverse_right(self, start, stop, step, color, right, skipped=[]):
+        """
+        A traversal function to determine its right possibilities
+        :param start: Where to start
+        :param stop: Ending coordinate
+        :param step: Iteration resolution
+        :param color: Which piece format to follow
+        :param right: Direction
+        :param skipped: Used for self recursion
+        :return: Possible moves
+        """
         moves = {}
         last = []
         for r in range(start, stop, step):

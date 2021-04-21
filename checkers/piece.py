@@ -17,14 +17,24 @@ class Piece:
         self.calc_pos()
 
     def calc_pos(self):
+        """
+        Calculate the position relative to the window board
+        """
         getLoc = lambda pos: SQUARE_SIZE * pos + SQUARE_SIZE // 2
         self.x = getLoc(self.col)
         self.y = getLoc(self.row)
 
     def make_king(self):
+        """
+        Turn piece into a king
+        """
         self.king = True
 
     def draw(self, window):
+        """
+        Draw piece
+        :param window: Window to be drawn on
+        """
         radius = SQUARE_SIZE // 2 - self.PADDING
         pygame.draw.circle(window, GRAY, (self.x, self.y), radius + self.BORDER)
         pygame.draw.circle(window, self.color, (self.x, self.y), radius)
@@ -33,9 +43,18 @@ class Piece:
             window.blit(img, (self.x - img.get_width()//2, self.y - img.get_height()//2))
 
     def move(self, row, col):
+        """
+        Update the piece's position
+        :param row: Target row
+        :param col: Target column
+        """
         self.row = row
         self.col = col
         self.calc_pos()
 
     def __repr__(self):
+        """
+        The piece's obj representation is its color string
+        :return: OBJ rep
+        """
         return str(self.color)
