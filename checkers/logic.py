@@ -1,5 +1,5 @@
 import pygame
-from .config import RED, WHITE, BLUE, SQUARE_SIZE
+from .config import PLAYER_COLOR_TOP, PLAYER_COLOR_BOTTOM, POSSIBLE_MOVE_COLOR, SQUARE_SIZE
 from .board import Board
 
 
@@ -19,7 +19,7 @@ class Game:
     def _init(self):
         self.selected = None
         self.board = Board()
-        self.turn = RED
+        self.turn = PLAYER_COLOR_BOTTOM
         self.valid_moves = {}
 
     def winner(self):
@@ -83,17 +83,17 @@ class Game:
         """
         for move in moves:
             row, col = move
-            pygame.draw.circle(self.window, BLUE, (col * SQUARE_SIZE + SQUARE_SIZE // 2, row * SQUARE_SIZE + SQUARE_SIZE // 2), 15)
+            pygame.draw.circle(self.window, POSSIBLE_MOVE_COLOR, (col * SQUARE_SIZE + SQUARE_SIZE // 2, row * SQUARE_SIZE + SQUARE_SIZE // 2), 15)
 
     def change_turn(self):
         """
         Cycle turns
         """
         self.valid_moves = {}
-        if self.turn == RED:
-            self.turn = WHITE
+        if self.turn == PLAYER_COLOR_BOTTOM:
+            self.turn = PLAYER_COLOR_TOP
         else:
-            self.turn = RED
+            self.turn = PLAYER_COLOR_BOTTOM
 
     def get_board(self):
         """
