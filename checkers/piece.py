@@ -1,5 +1,5 @@
 import pygame
-from .config import WHITE, RED, SQUARE_SIZE, GRAY, FONT
+from .config import PLAYER_COLOR_TOP, PLAYER_COLOR_BOTTOM, SQUARE_SIZE, GRAY, FONT
 
 class Piece:
     PADDING = 10
@@ -10,7 +10,7 @@ class Piece:
         self.col = col
         self.color = color
         self.king = False
-        self.direction = 1 if self.color == WHITE else -1
+        self.direction = 1 if self.color == PLAYER_COLOR_TOP else -1
 
         self.x = 0
         self.y = 0
@@ -39,7 +39,7 @@ class Piece:
         pygame.draw.circle(window, GRAY, (self.x, self.y), radius + self.BORDER)
         pygame.draw.circle(window, self.color, (self.x, self.y), radius)
         if self.king:
-            img = FONT.render('K', True, WHITE if self.color == RED else RED)
+            img = FONT.render('K', True, PLAYER_COLOR_TOP if self.color == PLAYER_COLOR_BOTTOM else PLAYER_COLOR_BOTTOM)
             window.blit(img, (self.x - img.get_width()//2, self.y - img.get_height()//2))
 
     def move(self, row, col):
