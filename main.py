@@ -1,9 +1,11 @@
 import pygame
-from checkers.config import WIDTH, HEIGHT, WHITE, RED, SQUARE_SIZE
+from checkers.config import WIDTH, HEIGHT, PLAYER_COLOR_TOP, PLAYER_COLOR_BOTTOM, SQUARE_SIZE
 from checkers.logic import Game
-from minimax.minimax import minimax
+from intelligence_models.minimax import minimax
+from intelligence_models.random import random_actor
+
 FPS = 60
-minimax_depth = 3
+minimax_depth = 5
 user_play = True
 
 WINDOW = pygame.display.set_mode((WIDTH, HEIGHT))
@@ -31,17 +33,25 @@ def main():
     while run:
         clock.tick(FPS)
 
-        if game.turn == WHITE:
-            value, new_board = minimax(game.get_board(), minimax_depth, True, game)
-            game.actor_move(new_board)
-
-        if not user_play:
-            if game.turn == RED:
-                value, new_board = minimax(game.get_board(), minimax_depth+1, False, game)
+        if game.turn == PLAYER_COLOR_TOP:
+            value, new_board = minimax(game.get_board(), minimax_depth, True)
+            if new_board is None:
+                print_winner(PLAYER_COLOR_BOTTOM)
+                run = False
+            else:
                 game.actor_move(new_board)
 
-        if game.winner() != None:
-            print(game.winner())
+        elif not user_play:
+            if game.turn == PLAYER_COLOR_BOTTOM:
+                new_board = random_actor(game.get_board(), game.turn)
+                if new_board is None:
+                    print_winner(PLAYER_COLOR_TOP)
+                    run = False
+                else:
+                    game.actor_move(new_board)
+
+        if game.winner() is not None:
+            print_winner(game.winner())
             run = False
 
         for event in pygame.event.get():
@@ -56,5 +66,12 @@ def main():
         game.update()
 
     pygame.quit()
+
+def print_winner(winner):
+    if winner == PLAYER_COLOR_BOTTOM:
+        print("Bottom player wins")
+    else:
+        print("Top player wins")
+    print(winner)
 
 main()
