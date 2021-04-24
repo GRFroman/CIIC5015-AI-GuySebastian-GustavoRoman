@@ -7,6 +7,8 @@ from intelligence_models.random import random_actor
 FPS = 60
 minimax_depth = 5
 user_play = True
+random_on = True
+minimax_on = False
 
 WINDOW = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Checkers AI")
@@ -33,20 +35,39 @@ def main():
     while run:
         clock.tick(FPS)
 
-        if game.turn == PLAYER_COLOR_TOP:
-            value, new_board = minimax(game.get_board(), minimax_depth, True)
-            if new_board is None:
-                print_winner(PLAYER_COLOR_BOTTOM)
-                run = False
-            else:
-                game.actor_move(new_board)
+        if minimax_on:
+            if game.turn == PLAYER_COLOR_TOP:
+                value, new_board = minimax(game.get_board(), minimax_depth, True)
+                if new_board is None:
+                    print_winner(PLAYER_COLOR_BOTTOM)
+                    run = False
+                else:
+                    game.actor_move(new_board)
 
-        elif not user_play:
-            if game.turn == PLAYER_COLOR_BOTTOM:
+            elif not user_play:
+                if game.turn == PLAYER_COLOR_BOTTOM:
+                    value, new_board = minimax(game.get_board(), minimax_depth, True)
+                    if new_board is None:
+                        print_winner(PLAYER_COLOR_TOP)
+                        run = False
+                else:
+                    game.actor_move(new_board)
+
+        if random_on:
+            if game.turn == PLAYER_COLOR_TOP:
                 new_board = random_actor(game.get_board(), game.turn)
                 if new_board is None:
-                    print_winner(PLAYER_COLOR_TOP)
+                    print_winner(PLAYER_COLOR_BOTTOM)
                     run = False
+                else:
+                    game.actor_move(new_board)
+
+            elif not user_play:
+                if game.turn == PLAYER_COLOR_BOTTOM:
+                    new_board = random_actor(game.get_board(), game.turn)
+                    if new_board is None:
+                        print_winner(PLAYER_COLOR_TOP)
+                        run = False
                 else:
                     game.actor_move(new_board)
 
