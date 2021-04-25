@@ -3,15 +3,23 @@ from checkers.config import WIDTH, HEIGHT, PLAYER_COLOR_TOP, PLAYER_COLOR_BOTTOM
 from checkers.logic import Game
 from intelligence_models.minimax import minimax
 from intelligence_models.random import random_actor
+from intelligence_models.minimax_alpha_beta import alphabeta
 
 FPS = 60
-minimax_depth = 5
-user_play = True
-random_on = True
-minimax_on = False
+
+# Tree depths for minimax and minimax-ab
+minimax_depth = 3
+minimax_ab_depth = 3
+
+# Global variables for game setup manipulation
+user_play = False
+random_on = False
+minimax_on = True
+minimax_ab_on = False
 
 WINDOW = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Checkers AI")
+
 
 def get_pos_from_mouse(pos):
     """
@@ -24,6 +32,7 @@ def get_pos_from_mouse(pos):
     col = x // SQUARE_SIZE
     return row, col
 
+
 def main():
     """
     Main event loop
@@ -35,6 +44,7 @@ def main():
     while run:
         clock.tick(FPS)
 
+        # Minimax checkers game
         if minimax_on:
             if game.turn == PLAYER_COLOR_TOP:
                 value, new_board = minimax(game.get_board(), minimax_depth, True)
@@ -53,6 +63,7 @@ def main():
                 else:
                     game.actor_move(new_board)
 
+        # Random checkers game
         if random_on:
             if game.turn == PLAYER_COLOR_TOP:
                 new_board = random_actor(game.get_board(), game.turn)
@@ -65,6 +76,25 @@ def main():
             elif not user_play:
                 if game.turn == PLAYER_COLOR_BOTTOM:
                     new_board = random_actor(game.get_board(), game.turn)
+                    if new_board is None:
+                        print_winner(PLAYER_COLOR_TOP)
+                        run = False
+                else:
+                    game.actor_move(new_board)
+
+        # Minimax-ab checkers game
+        if minimax_ab_on:
+            if game.turn == PLAYER_COLOR_TOP:
+                value, new_board = alphabeta(game.get_board(), minimax_ab_depth, float('-inf'), float('inf'), True)
+                if new_board is None:
+                    print_winner(PLAYER_COLOR_BOTTOM)
+                    run = False
+                else:
+                    game.actor_move(new_board)
+
+            elif not user_play:
+                if game.turn == PLAYER_COLOR_BOTTOM:
+                    value, new_board = alphabeta(game.get_board(), minimax_ab_depth, float('-inf'), float('inf'), True)
                     if new_board is None:
                         print_winner(PLAYER_COLOR_TOP)
                         run = False
@@ -88,11 +118,13 @@ def main():
 
     pygame.quit()
 
+
 def print_winner(winner):
     if winner == PLAYER_COLOR_BOTTOM:
         print("Bottom player wins")
     else:
         print("Top player wins")
     print(winner)
+
 
 main()
