@@ -3,12 +3,15 @@ from checkers.config import WIDTH, HEIGHT, PLAYER_COLOR_TOP, PLAYER_COLOR_BOTTOM
 from checkers.logic import Game
 from intelligence_models.minimax import minimax
 from intelligence_models.random import random_actor
+from intelligence_models.minimax_alpha_beta import alphabeta
 
 FPS = 60
 minimax_depth = 5
+minimax_ab_depth = 7
 user_play = True
-random_on = True
+random_on = False
 minimax_on = False
+minimax_ab_on = True
 
 WINDOW = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Checkers AI")
@@ -70,6 +73,26 @@ def main():
                         run = False
                 else:
                     game.actor_move(new_board)
+
+        if minimax_ab_on:
+            if game.turn == PLAYER_COLOR_TOP:
+                value, new_board = alphabeta(game.get_board(), minimax_ab_depth, float('-inf'), float('inf'), True)
+                if new_board is None:
+                    print_winner(PLAYER_COLOR_BOTTOM)
+                    run = False
+                else:
+                    game.actor_move(new_board)
+
+            elif not user_play:
+                if game.turn == PLAYER_COLOR_BOTTOM:
+                    value, new_board = alphabeta(game.get_board(), minimax_ab_depth, float('-inf'), float('inf'), True)
+                    if new_board is None:
+                        print_winner(PLAYER_COLOR_TOP)
+                        run = False
+                else:
+                    game.actor_move(new_board)
+
+
 
         if game.winner() is not None:
             print_winner(game.winner())
