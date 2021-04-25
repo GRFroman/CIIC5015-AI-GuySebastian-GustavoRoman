@@ -31,9 +31,9 @@ def alphabeta(position, depth, a, b, max_player):
             value = alphabeta(move, depth - 1, a, b, False)[0]
             max_value = max(max_value, value)
             a = max(a, max_value)
-            best_move = move if max_value == value else best_move
             if a >= b:
                 break
+            best_move = move if max_value == value else best_move
 
         return max_value, best_move
 
@@ -47,8 +47,9 @@ def alphabeta(position, depth, a, b, max_player):
             value = alphabeta(move, depth - 1, a, b, True)[0]
             min_value = min(min_value, value)
             b = min(b, min_value)
-            best_move = move if min_value == value else best_move
-            if b <= a:
+            if a >= b:
                 break
+
+            best_move = move if min_value == value else best_move
 
         return min_value, best_move
