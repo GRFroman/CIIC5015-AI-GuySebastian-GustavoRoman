@@ -22,4 +22,4 @@ def random_actor(board, player):
         return None
 
     # Return a random move from the randomized sample
-    return randomize[randint(0, 3)]
+    return 0, randomize[randint(0, 3)]

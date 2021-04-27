@@ -56,17 +56,17 @@ def main():
 
             elif not user_play:
                 if game.turn == PLAYER_COLOR_BOTTOM:
-                    value, new_board = minimax(game.get_board(), minimax_depth, True)
+                    value, new_board = minimax(game.get_board(), minimax_depth, False)
                     if new_board is None:
                         print_winner(PLAYER_COLOR_TOP)
                         run = False
-                else:
-                    game.actor_move(new_board)
+                    else:
+                        game.actor_move(new_board)
 
         # Random checkers game
         if random_on:
             if game.turn == PLAYER_COLOR_TOP:
-                new_board = random_actor(game.get_board(), game.turn)
+                value, new_board = random_actor(game.get_board(), game.turn)
                 if new_board is None:
                     print_winner(PLAYER_COLOR_BOTTOM)
                     run = False
@@ -75,12 +75,12 @@ def main():
 
             elif not user_play:
                 if game.turn == PLAYER_COLOR_BOTTOM:
-                    new_board = random_actor(game.get_board(), game.turn)
+                    value, new_board = random_actor(game.get_board(), game.turn)
                     if new_board is None:
                         print_winner(PLAYER_COLOR_TOP)
                         run = False
-                else:
-                    game.actor_move(new_board)
+                    else:
+                        game.actor_move(new_board)
 
         # Minimax-ab checkers game
         if minimax_ab_on:
@@ -94,12 +94,12 @@ def main():
 
             elif not user_play:
                 if game.turn == PLAYER_COLOR_BOTTOM:
-                    value, new_board = alphabeta(game.get_board(), minimax_ab_depth, float('-inf'), float('inf'), True)
+                    value, new_board = alphabeta(game.get_board(), minimax_ab_depth, float('-inf'), float('inf'), False)
                     if new_board is None:
                         print_winner(PLAYER_COLOR_TOP)
                         run = False
-                else:
-                    game.actor_move(new_board)
+                    else:
+                        game.actor_move(new_board)
 
         if game.winner() is not None:
             print_winner(game.winner())
