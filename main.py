@@ -13,8 +13,8 @@ minimax_ab_depth = 3
 
 # Global variables for game setup manipulation
 user_play = False
-random_on = False
-minimax_on = True
+random_on = True
+minimax_on = False
 minimax_ab_on = False
 
 WINDOW = pygame.display.set_mode((WIDTH, HEIGHT))
