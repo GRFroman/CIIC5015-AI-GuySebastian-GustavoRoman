@@ -1,4 +1,4 @@
-from random import*
+import random
 
 from .ai_utils import get_all_moves
 
@@ -14,12 +14,9 @@ def random_actor(board, player):
     # Obtain all possible moves from the current board
     moves = get_all_moves(board, player)
 
-    # Obtain a random sample of moves from all possible moves
-    randomize = sample(moves, 4)
-
     # Verify there are possible moves to choose from
     if len(moves) == 0:
-        return None
+        return 0, None
 
     # Return a random move from the randomized sample
-    return 0, randomize[randint(0, 3)]
+    return 0, moves[random.randint(0, len(moves)-1)]
